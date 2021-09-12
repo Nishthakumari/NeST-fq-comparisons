@@ -1,21 +1,21 @@
 # SPDX-License-Identifier: GPL-2.0-only
 # Copyright (c) 2019-2020 NITK Surathkal
 
-"""Plot ping results"""
+"""Plot netperf results"""
 
 import logging
 import matplotlib.pyplot as plt
 import numpy as np
 
 from ..pack import Pack
-from .common import simple_plot
+from .common import simple_plot, mix_plot
 
 logger = logging.getLogger(__name__)
 
 
-def _plot_ping_flow(flow, node, dest):
+def _plot_netperf_flow(flow, node, dest):
     """
-    Plot ping stats of the flow
+    Plot netperf stats of the flow
 
     Parameters
     ----------
@@ -24,19 +24,19 @@ def _plot_ping_flow(flow, node, dest):
     flow : List
         List with timestamps and stats
     node : str
-        Node from which ping results were obtained from
+        Node from which netperf results were obtained from
     dest :
         Destination ip:port address of the flow
 
     Returns
     -------
     tuple/None
-        Timestamped rtt values
+        Timestamped sending_rate values
     """
     # "meta" item will always be present, hence `<= 1`
     if len(flow) <= 1:
         logger.warning(
-            "Flow from %s to destination %s " "doesn't have any parsed ping result.",
+            "Flow from %s to destination %s " "doesn't have any parsed netperf result.",
             node,
             dest,
         )
@@ -49,37 +49,37 @@ def _plot_ping_flow(flow, node, dest):
     start_time = float(flow[1]["timestamp"]) - user_given_start_time
 
     timestamp = []
-    rtt = []
+    sending_rate = []
 
     for data in flow[1:]:
-        rtt.append(float(data["rtt"]))
+        sending_rate.append(float(data["sending_rate"]))
         relative_time = float(data["timestamp"]) - start_time
         timestamp.append(relative_time)
 
+    # TODO: Check if sending_rate is always in Mbps
     fig = simple_plot(
-        "Ping",
+        "Netperf",
         timestamp,
-        rtt,
+        sending_rate,
         "Time (s)",
-        "RTT (ms)",
+        "Sending rate (Mbps)",
         legend_string=f"{node} to {dest}",
     )
-    filename = "{node}_{dest}_ping.png".format(node=node, dest=dest)
-    Pack.dump_plot("ping", filename, fig)
+
+    filename = "{node}_{dest}_sending_rate.png".format(node=node, dest=dest)
+    Pack.dump_plot("netperf", filename, fig)
     plt.close(fig)
-    
-    filename2 = "{node}_{dest}_ping.dat".format(node=node, dest=dest)
-    dat = np.array([timestamp, rtt])
+    filename2 = "{node}_{dest}_sending_rate.dat".format(node=node, dest=dest)
+    dat = np.array([timestamp, sending_rate])
     a= np.column_stack((dat))
-    Pack.dump_dat("ping", filename2, a)
+    Pack.dump_dat("netperf", filename2, a)
+
+    return (timestamp, sending_rate)
 
 
-    return (timestamp, rtt)
-
-
-def plot_ping(parsed_data):
+def plot_netperf(parsed_data):
     """
-    Plot statistics obtained from ping
+    Plot statistics obtained from netperf
 
     Parameters
     ----------
@@ -91,7 +91,24 @@ def plot_ping(parsed_data):
     for node in parsed_data:
         node_data = parsed_data[node]
 
+        all_flow_data = []
         for connection in node_data:
             for dest in connection:
                 flow = connection[dest]
-                _plot_ping_flow(flow, node, dest)
+                values = _plot_netperf_flow(flow, node, dest)
+                if values is not None:
+                    all_flow_data.append(
+                        {"label": f"{node} to {dest}", "values": values}
+                    )
+
+        if len(all_flow_data) > 1:
+            fig = mix_plot(
+                "Netperf",
+                all_flow_data,
+                "Time (s)",
+                "Sending rate (Mbps)",
+                with_sum=True,
+            )
+            filename = f"{node}_sending_rate.png"
+            Pack.dump_plot("netperf", filename, fig)
+            plt.close(fig)
