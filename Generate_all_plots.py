@@ -20,7 +20,7 @@ import sys
 #
 ##############################
 
-queue_disciplines = ["cake"]
+queue_disciplines = ["fq_codel", "fq_pie", "cake"]
 rates = [("800mbit","80mbit"),("1600mbit","160mbit"),("10000mbit","1000mbit")] # (Edge bandwidth, bottleneck bandwidth)
 ecn_values = [True, False]
 delays = [("0.25","1.5"),("2.5","15"),("5","30"),("10","380")] # (Edge delay, bottleneck delay)
@@ -31,9 +31,9 @@ offloads_value = ["ON", "OFF"]
 ###### TOPOLOGY CREATION ######
 
 for qdisc in queue_disciplines:
-    for (edge, bbw) in rates:
+    for rate in rates:
         for ecn in ecn_values:
-            for (ed, bd) in delays:
+            for delay in delays:
                 for number_of_flow in flows:
                     for offload in offloads_value:
                         for duration in stop_times:
@@ -52,8 +52,8 @@ for qdisc in queue_disciplines:
                             num_of_left_nodes = 1
                             num_of_right_nodes = 1
 
-                            edge_delay = ed + "ms"
-                            bottleneck_delay = bd + "ms"
+                            edge_delay = delay[0] + "ms"
+                            bottleneck_delay = delay[1] + "ms"
 
                             if ecn == True:
                                 # Creating all the left and right nodes
@@ -166,43 +166,39 @@ for qdisc in queue_disciplines:
                             # Setting up the attributes of the connections between
                             # the nodes on the left-side and the left-router
                             for i in range(num_of_left_nodes):
-                                left_node_connections[i][0].set_attributes(edge, ed)
-                                left_node_connections[i][1].set_attributes(edge, ed)
+                                left_node_connections[i][0].set_attributes(rate[0], edge_delay)
+                                left_node_connections[i][1].set_attributes(rate[0], edge_delay)
                             
                             # Setting up the attributes of the connections between
                             # the nodes on the right-side and the right-router
                             for i in range(num_of_right_nodes):
-                                right_node_connections[i][0].set_attributes(edge, ed)
-                                right_node_connections[i][1].set_attributes(edge, ed)
+                                right_node_connections[i][0].set_attributes(rate[0], edge_delay)
+                                right_node_connections[i][1].set_attributes(rate[0], edge_delay)
 
                             if ecn == True:
                                 if qdisc == "fq_pie":
                                     qdisc_parameters = {'target': '5ms', 'ecn': ''}
                                 elif qdisc == "cake":
-                                    value = 2 * float(bd) + 4 * float(ed)
+                                    value = 2 * float(delay[1]) + 4 * float(delay[0])
                                     qdisc_parameters = {'rtt' : str(value), 'ecn': ''}
                                 else:
                                     qdisc_parameters = {'ecn': ''}
 
-                                left_router_connection.set_attributes(bbw, bottleneck_delay, qdisc, **qdisc_parameters)
-                                right_router_connection.set_attributes(bbw, bottleneck_delay, qdisc, **qdisc_parameters)
+                                left_router_connection.set_attributes(rate[1], bottleneck_delay, qdisc, **qdisc_parameters)
+                                right_router_connection.set_attributes(rate[1], bottleneck_delay, qdisc, **qdisc_parameters)
 
                             elif ecn == False: 
                                 if qdisc == "fq_pie":
                                     qdisc_parameters = {'target': '5ms'}
                                 elif qdisc == "cake":
-                                    value = 2 * float(bd) + 4 * float(ed)
+                                    value = 2 * float(delay[1]) + 4 * float(ed)
                                     qdisc_parameters = {'rtt' : str(value)}
                                 else:
                                     qdisc_parameters = {}
 
-                                left_router_connection.set_attributes(bbw, bottleneck_delay, qdisc, **qdisc_parameters)
-                                right_router_connection.set_attributes(bbw, bottleneck_delay, qdisc, **qdisc_parameters)
-                                
+                                left_router_connection.set_attributes(rate[1], bottleneck_delay, qdisc, **qdisc_parameters)
+                                right_router_connection.set_attributes(rate[1], bottleneck_delay, qdisc, **qdisc_parameters)
 
-                            if qdisc == "cake":
-                                value = 2 * float(bd) + 4 * float(ed)
-                                qdisc_parameters = {'rtt' : value}
 
                             if offload == "OFF":
                                 offload_type = ["gso", "gro", "tso"]
@@ -218,12 +214,13 @@ for qdisc in queue_disciplines:
                                 left_router_connection.disable_offload(offload_type)
                                 right_router_connection.disable_offload(offload_type)
 
+
                             ######  RUN TESTS ######
                             name = ""
                             if(ecn == True):
-                                name += qdisc + ' ECN-' + "ON "  + edge + " " + bbw + " " + ed + " " + bd + " " + str(number_of_flow)
+                                name += qdisc + ' ECN-' + "ON "  + rate[0] + " " + rate[1] + " " + delay[0] + " " + delay[1] + " " + str(number_of_flow)
                             else :
-                                name += qdisc + ' ECN-' + "OFF " + edge + " " + bbw + " " + ed + " " + bd + " " + str(number_of_flow)
+                                name += qdisc + ' ECN-' + "OFF " + rate[0] + " " + rate[1] + " " + delay[0] + " " + delay[1] + " " + str(number_of_flow)
                             
                             # Giving the experiment a name
                             experiment = Experiment(name)
