@@ -1,20 +1,25 @@
-# nitk-nest-experiments
-
-
-#Comparison Plots for Fq-CoDel and Fq-Pie
-
-# Nest tests on Dumbell Topology
+# NeST-fq-comparisons
 
 ## Requirements Setup
-
 * nitk-nest
+
+```bash
+python3 -m pip install nitk-nest
+```
+
 * gnuplot
 
-bash
-python3 -m pip install nitk-nest
-
+```bash
 sudo apt-get update
 sudo apt-get install gnuplot
+```
+
+## Notes
+- `FQ_PIE` AQM support in *iproute2* was added from version 5.5.
+- To install iproute2 with fq_pie support (e.g: v5.7)
+
+* Install iproute2 (version >= 5.5) and apply the custom NeST patches as mentioned [here](./misc_patch_scripts/README.md)
+
 
 
 ## Usage
@@ -29,14 +34,6 @@ sudo python3 TCP_flow.py
 bash
 sudo python3 TCP_flow.py <num_of_left_nodes> <num_of_right_nodes> <bottleneck-delay> <bottleneck-bandwidth> <edge-delay> <edge-bandwidth> <qdisc>
 
-
-## Notes
-- `FQ_PIE` AQM support in *iproute2* was added from version 5.5.
-- To install iproute2 with fq_pie support (e.g: v5.7)
-
-bash
-wget http://in.archive.ubuntu.com/ubuntu/pool/main/i/iproute2/iproute2_5.7.0-1ubuntu1_amd64.deb
-sudo apt install ./iproute2_5.7.0-1ubuntu1_amd64.deb
 
 ## To generate gnuplots:
 
