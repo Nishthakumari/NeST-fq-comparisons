@@ -1,0 +1,11 @@
+
+set terminal png
+set output outputfile
+set xlabel X_axis_label font "Verdana,12"
+set ylabel Y_axis_label font "Verdana,12"
+set grid
+show grid
+set key font "Verdana,12"
+set key above
+plot for [i=1:words(files)] word(files, i) using 1:2 with lines title word(titles, i)
+
