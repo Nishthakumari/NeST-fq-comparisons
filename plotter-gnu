@@ -1,4 +1,3 @@
-
 set terminal png
 set output outputfile
 set xlabel X_axis_label font "Verdana,12"
