@@ -56,22 +56,23 @@ def _plot_ping_flow(flow, node, dest):
         relative_time = float(data["timestamp"]) - start_time
         timestamp.append(relative_time)
 
-    fig = simple_plot(
-        "Ping",
-        timestamp,
-        rtt,
-        "Time (s)",
-        "RTT (ms)",
-        legend_string=f"{node} to {dest}",
-    )
-    filename = "{node}_{dest}_ping.png".format(node=node, dest=dest)
-    Pack.dump_plot("ping", filename, fig)
-    plt.close(fig)
+   # fig = simple_plot(
+   #    "Ping",
+   #     timestamp,
+   #     rtt,
+   #     "Time (s)",
+   #     "RTT (ms)",
+   #     legend_string=f"{node} to {dest}",
+   # )
     
-    filename2 = "{node}_{dest}_ping.dat".format(node=node, dest=dest)
+    #filename = "{node}_{dest}_ping.png".format(node=node, dest=dest)
+    #Pack.dump_plot("ping", filename, fig)
+    #plt.close(fig)
+    
+    filename2 = "ping.dat"
     dat = np.array([timestamp, rtt])
     a= np.column_stack((dat))
-    Pack.dump_dat("ping", filename2, a)
+    Pack.dump_dat(filename2, a)
 
 
     return (timestamp, rtt)

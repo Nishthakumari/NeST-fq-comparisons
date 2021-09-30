@@ -159,26 +159,25 @@ def _plot_ss_flow(flow, node, dest_ip, dest_port):
     (timestamp, flow_params) = values
 
     for param in flow_params:
-        fig = simple_plot(
-            "Socket Stats (ss)",
-            timestamp,
-            flow_params[param],
-            "Time (s)",
-            _get_ylabel(param),
-            legend_string=f"{node} to {dest_ip}:{dest_port}",
-        )
+    #    fig = simple_plot(
+    #        "Socket Stats (ss)",
+    #        timestamp,
+    #        flow_params[param],
+    #        "Time (s)",
+    #        _get_ylabel(param),
+    #        legend_string=f"{node} to {dest_ip}:{dest_port}",
+    #    )
          
-        filename = f"{node}_{dest_ip}:{dest_port}_{param}.png"
-        Pack.dump_plot("ss", filename, fig)
-        plt.close(fig)
+        #filename = f"{node}_{dest_ip}:{dest_port}_{param}.png"
+        #Pack.dump_plot("ss", filename, fig)
+        #plt.close(fig)
         
-        import os 
-        dir_path = os.path.dirname(os.path.realpath(__file__))
         
-        filename2 = f"{node}_{dest_ip}:{dest_port}_{param}.dat"
+        
+        filename2 = f"{param}.dat"
         dat = np.array([timestamp, flow_params[param]])
         a= np.column_stack((dat))
-        Pack.dump_dat("ss", filename2, a)
+        Pack.dump_dat(filename2, a)
         #np.savetxt(filename2, a, delimiter=',', fmt='%s')
 
 
@@ -242,9 +241,9 @@ def plot_ss(parsed_data):
                                 {"values": (x_vals[i], y_vals[i]), "label": labels[i]}
                             )
 
-                        fig = mix_plot(
-                            "Socket Stats (ss)", data, "Time (s)", _get_ylabel(param)
-                        )
-                        filename = f"{node}_{dest_ip}_{param}.png"
-                        Pack.dump_plot("ss", filename, fig)
-                        plt.close(fig)
+                       # fig = mix_plot(
+                       #     "Socket Stats (ss)", data, "Time (s)", _get_ylabel(param)
+                       # )
+                       # filename = f"{node}_{dest_ip}_{param}.png"
+                       # Pack.dump_plot("ss", filename, fig)
+                       # plt.close(fig)

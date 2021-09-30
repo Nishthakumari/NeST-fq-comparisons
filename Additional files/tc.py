@@ -74,23 +74,23 @@ def _plot_tc_stats(stats, node, interface):
     (qdisc, timestamp, stats_params) = values
 
     for param in stats_params:
-        fig = simple_plot(
-            "Traffic Control (tc)",
-            timestamp,
-            stats_params[param],
-            "Time (s)",
-            param,
-            legend_string=f"Interface {interface} in {node}",
-        )
-        filename = f"{node}_{interface}_{qdisc}_{param}.png"
-        Pack.dump_plot("tc", filename, fig)
-        plt.close(fig)
+        #fig = simple_plot(
+        #    "Traffic Control (tc)",
+        #    timestamp,
+        #    stats_params[param],
+        #    "Time (s)",
+        #    param,
+        #    legend_string=f"Interface {interface} in {node}",
+        #)
+        #filename = f"{node}_{interface}_{qdisc}_{param}.png"
+        #Pack.dump_plot("tc", filename, fig)
+        #plt.close(fig)
         
         
-        filename2 = f"{node}_{interface}_{qdisc}_{param}.dat"
+        filename2 = f"{param}.dat"
         dat = np.array([timestamp, stats_params[param]])
         a= np.column_stack((dat))
-        Pack.dump_dat("tc", filename2, a)
+        Pack.dump_dat(filename2, a)
 
 
 def plot_tc(parsed_data):

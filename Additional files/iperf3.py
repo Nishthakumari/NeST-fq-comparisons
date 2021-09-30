@@ -83,23 +83,23 @@ def _plot_iperf3_flow(flow, node, dest_ip, local_port):
         return
     (timestamp, sending_rate) = values
 
-    fig = simple_plot(
-        "Iperf3",
-        timestamp,
-        sending_rate,
-        "Time (s)",
-        "Sending rate",
-        legend_string=f"{node} from port {local_port} to {dest_ip}",
-    )
+   # fig = simple_plot(
+   #     "Iperf3",
+   #     timestamp,
+   #     sending_rate,
+   #     "Time (s)",
+   #     "Sending rate",
+   #     legend_string=f"{node} from port {local_port} to {dest_ip}",
+   # )
 
-    filename = f"{node}_{dest_ip}_{local_port}_sending_rate.png"
-    Pack.dump_plot("iperf3", filename, fig)
-    plt.close(fig)
+    #filename = f"{node}_{dest_ip}_{local_port}_sending_rate.png"
+    #Pack.dump_plot("iperf3", filename, fig)
+    #plt.close(fig)
     
-    filename2 = f"{node}_{dest_ip}_{local_port}_sending_rate.png"
+    filename2 = f"sending_rate.dat"
     dat = np.array([timestamp, sending_rate])
     a= np.column_stack((dat))
-    Pack.dump_dat("iperf3", filename2, a)
+    Pack.dump_dat(filename2, a)
 
 
 

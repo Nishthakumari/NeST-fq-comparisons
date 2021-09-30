@@ -27,9 +27,7 @@ class Pack:
             Name of experiment
         """
         timestamp = time.strftime("%d-%m-%Y-%H:%M:%S")
-        Pack.FOLDER = "{exp_name}({timestamp})_dump".format(
-            exp_name=exp_name, timestamp=timestamp
-        )
+        Pack.FOLDER = "{exp_name}".format(exp_name=exp_name)
         os.mkdir(Pack.FOLDER)
         Pack.set_owner(Pack.FOLDER)
 
@@ -52,7 +50,7 @@ class Pack:
     
     
     @staticmethod
-    def dump_dat(subfolder, filename, a):
+    def dump_dat(filename, a):
         """
         Dump a plot into Pack.FOLDER
 
@@ -65,11 +63,11 @@ class Pack:
         fig : matplotlib.pyplot.fig
             Plot figure to be stored in file
         """
-        Pack.create_subfolder(subfolder)
-        path = os.path.join(Pack.FOLDER, subfolder, filename)
+        #Pack.create_subfolder(subfolder)
+        path = os.path.join(Pack.FOLDER, filename)
         #fig.savefig(path)
         with open(path, "w") as file:
-            np.savetxt(file, a, delimiter=',', fmt='%s')
+            np.savetxt(file, a, delimiter=' ', fmt='%s')
         Pack.set_owner(path)
     
     @staticmethod
