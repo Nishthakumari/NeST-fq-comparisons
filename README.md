@@ -32,7 +32,7 @@ pip install numpy
 
     $ python3 -m pip install -e .
 
-3. Install iproute2 (version >= 5.5) and apply the custom flent patches as mentioned [here](./misc_patch_scripts/README.md)    
+3. Install iproute2 (version >= 5.5) and apply the custom NeST patches as mentioned [here](./misc_patch_scripts/README.md)    
 
 3. Download the 'fq-comparison.py' file.
 
@@ -42,11 +42,7 @@ sudo python3 ..........
 ```
 
 ## Parameters:
-<<<<<<< HEAD
 1. **bottleneckQueueType:** The Queue type used ("fq_codel" / "fq_pie" / "cake") [fq_pie].
-=======
-1. **bottleneckQueueType:** The Queue type used ("fq_codel" / "fq_pie" / "cake") [fqPie].
->>>>>>> 0bd097f28a2c6c9798114c612101e2bde9225cfb
 2. **bottleneckDelay:** The delay on the bottleneck link ("Xms", where is X is the delay in milliseconds) [20ms].
 3. **linkDelay:** The delay on the edge links ("Xms", where X is the delay in milliseconds) [10ms].
 4. **bottleneckRate:** Data rate of bottleneck link ("XMbps", where X is the data rate in Mbps) [10Mbps].
