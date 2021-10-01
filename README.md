@@ -14,34 +14,53 @@ sudo apt-get update
 sudo apt-get install gnuplot
 ```
 
-## Notes
-- `FQ_PIE` AQM support in *iproute2* was added from version 5.5.
-- To install iproute2 with fq_pie support (e.g: v5.7)
+* numpy
+Install via pip:
 
-* Install iproute2 (version >= 5.5) and apply the custom NeST patches as mentioned [here](./misc_patch_scripts/README.md)
-
-
-
-## Usage
-
-- All *Bold* variable names are configurable network parameters
-
-bash
-sudo python3 TCP_flow.py
+```bash
+pip install numpy
+```
 
 
-- Use the following optional command line arguments 
-bash
-sudo python3 TCP_flow.py <num_of_left_nodes> <num_of_right_nodes> <bottleneck-delay> <bottleneck-bandwidth> <edge-delay> <edge-bandwidth> <qdisc>
 
+## Steps to use the script:
+1. Clone the official git repository::
 
-## To generate gnuplots:
+    $ git clone https://gitlab.com/nitk-nest/nest.git
 
-- convert the json files obtained by running the above command to csv files using the .py files
+2. Install NeST via pip in editable mode:
 
-python3 <filename>.py
+    $ python3 -m pip install -e .
 
-- plot the comparison graphs for a particualr parameter using gnuplot through the csv files
+3. Install iproute2 (version >= 5.5) and apply the custom flent patches as mentioned [here](./misc_patch_scripts/README.md)    
 
-gnuplot <parameter_name>.plt
+3. Download the 'fq-comparison.py' file.
+
+4. To run the file with default argument, please use the following command:
+```bash
+sudo python3 ..........
+```
+
+## Parameters:
+1. **bottleneckQueueType:** The Queue type used ("fq_codel" / "fq_pie" / "cake") [fqPie].
+2. **bottleneckDelay:** The delay on the bottleneck link ("Xms", where is X is the delay in milliseconds) [20ms].
+3. **linkDelay:** The delay on the edge links ("Xms", where X is the delay in milliseconds) [10ms].
+4. **bottleneckRate:** Data rate of bottleneck link ("XMbps", where X is the data rate in Mbps) [10Mbps].
+5. **linkrate:** Data rate of edge link  ("XMbps", where X is the bandwidth in Mbps) [100Mbps].
+6. **useEcn:** Boolean indicating whether ECN should be enabled or disabled ("true" / "false") [true].
+7. **useOffload:** Boolean indicating whether Offload should be enabled or disabled ("true" / "false") [false].
+8. **stopTime:** The duration of the experiment ("Xs", where X is the time in seconds) [70s].
+
+## Generating a plot:
+The steps to generate a plot using plotter-gnu is given below:
+Assume we want to compare the following 3 dat files in a single graph: 
+1. fqCodel_1_80Mbps_80ms_ECNEn_BQLDis/
+2. fqPie_1_80Mbps_80ms_ECNEn_BQLDis/mark.dat
+3. fqCobalt_1_80Mbps_80ms_ECNEn_BQLDis/mark.dat
+
+In such a case we would have to run the following. Notice that we are running this command in a folder that contains all the three folders (fqCodel_1_80Mbps_80ms_EcnEn_OFLDis/, fqPie_1_80Mbps_80ms_ECNEn_OFLDis/, fqCobalt_1_80Mbps_80ms_ECNEn_OFLDis/). If you run from elsewhere, please adjust the paths accordingly when you run.
+
+```bash
+gnuplot -e "files = 'fqCodel_1_80Mbps_80ms_ECNEn_OFLDis/cwnd.dat fqPie_1_80Mbps_80ms_ECNEn_OFLDis/cwnd.dat fqCobalt_1_80Mbps_80ms_ECNEn_OFLDis/cwnd.dat' ; outputfile='MyPlot.png'; titles = 'FQ-CoDel FQ-Pie FQ-Cobalt'; X_axis_label='Time (Seconds)' ; Y_axis_label='CWND (Packets)'" plotter-gnu
+```
 
