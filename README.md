@@ -4,7 +4,13 @@
 * nitk-nest
 
 ```bash
-python3 -m pip install nitk-nest
+1. Clone the official git repository::
+
+    $ git clone https://gitlab.com/nitk-nest/nest.git
+
+2. Install NeST via pip in editable mode:
+
+    $ python3 -m pip install -e .
 ```
 
 * gnuplot
