@@ -234,7 +234,7 @@ experiment = Experiment(name)
 # Add a flow from the left nodes to respective right nodes
 for i in range(min(num_of_left_nodes, num_of_right_nodes)):
     flow = Flow(
-        left_nodes[i], right_nodes[i], right_node_connections[i][0].address, 0, 40, 1
+        left_nodes[i], right_nodes[i], right_node_connections[i][0].address, 0, duration, 1
     )
     # Use TCP cubic
     experiment.add_tcp_flow(flow, "cubic")
