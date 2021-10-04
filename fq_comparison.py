@@ -35,26 +35,12 @@ number_of_flow = sys.argv[9]
 duration = sys.argv[10]
 
 rtt= int(bottleneck_delay[:-2])*2+int(edge_delay[:-2])*4;
-#queue_disciplines = ["cake"]
-
-
-#rates = [("800mbit","80mbit"),("1600mbit","160mbit"),("10000mbit","1000mbit")] # (Edge bandwidth, bottleneck bandwidth)
-#rates_map = { "80mbit": "80Mbps", "160mbit" : "160Mbps", "1000mbit": "1000Mbps"}
-
-#ecn_values = [False]
-#ecn_values_map = {False: "ECNDis"}
-
-#delays = [("0.25","1.5"),("2.5","15"),("5","30"),("10","380")] # (Edge delay, bottleneck delay)
-#delays_map = {("0.25","1.5"): "4ms", ("2.5","15"): "40ms", ("5","30") :"80ms", ("10","380") : "800ms"}
-#flows = [1, 3, 16]
-#stop_times = [40]
-#offloads_value = ["ON"]
-#offloads_value_map = {"ON":"OFLEn"}
 
 ###### map tp proper name ######
 offloads_value_map = {"ON":"OFLEn", "OFF":"OFLDis"}
 ecn_values_map = {False: "ECNDis", True:"ECNEn"}
 unit_map = { "mbit": "Mbps"}
+queue_discipline_map = { "cake": "fqCobalt", "fq_codel": "fqCodel", "fq_pie": "fqPie"}
 
 ###### TOPOLOGY CREATION ######
 
@@ -74,7 +60,7 @@ right_nodes = []
 num_of_left_nodes = 1
 num_of_right_nodes = 1
 
-if ecn == True:
+if ECN == True:
     # Creating all the left and right nodes
     for i in range(num_of_left_nodes):
         left_nodes.append(Node("left-node-" + str(i)))
@@ -84,7 +70,7 @@ if ecn == True:
         right_nodes.append(Node("right-node-" + str(i)))
         right_nodes[i].configure_tcp_param("ecn", "1")
 
-elif ecn == False:
+elif ECN == False:
     # Creating all the left and right nodes
     for i in range(num_of_left_nodes):
         left_nodes.append(Node("left-node-" + str(i)))
@@ -193,7 +179,7 @@ for i in range(num_of_right_nodes):
     right_node_connections[i][0].set_attributes(edge_bandwidth, edge_delay)
     right_node_connections[i][1].set_attributes(edge_bandwidth, edge_delay)
 
-if ecn == True:
+if ECN == True:
     if qdisc == "fq_pie":
         qdisc_parameters = {'target': '5ms', 'ecn': ''}
     elif qdisc == "cake":
@@ -205,7 +191,7 @@ if ecn == True:
     left_router_connection.set_attributes(rate[1], bottleneck_delay, qdisc, **qdisc_parameters)
     right_router_connection.set_attributes(rate[1], bottleneck_delay, qdisc, **qdisc_parameters)
 
-elif ecn == False: 
+elif ECN == False: 
     if qdisc == "fq_pie":
         qdisc_parameters = {'target': '5ms'}
     elif qdisc == "cake":
@@ -250,7 +236,7 @@ for i in range(min(num_of_left_nodes, num_of_right_nodes)):
         left_nodes[i], right_nodes[i], right_node_connections[i][0].address, 0, 40, 1
     )
     # Use TCP cubic
-    experiment.add_tcp_flow(flow, tcp)
+    experiment.add_tcp_flow(flow, "cubic")
 
 # Request traffic control stats
 experiment.require_qdisc_stats(left_router_connection)
