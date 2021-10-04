@@ -44,18 +44,20 @@ pip install numpy
 
 4. To run the file with default argument, please use the following command:
 ```bash
-sudo python3 ..........
+sudo python3 <qdisc> <bottleneck-delay> <bottleneck-bandwidth> <edge-delay> <edge-bandwidth> <ECN> <offload> <number of flow> <duration> 
 ```
 
 ## Parameters:
-1. **bottleneckQueueType:** The Queue type used ("fq_codel" / "fq_pie" / "cake") [fq_pie].
-2. **bottleneckDelay:** The delay on the bottleneck link ("Xms", where is X is the delay in milliseconds) [20ms].
-3. **linkDelay:** The delay on the edge links ("Xms", where X is the delay in milliseconds) [10ms].
-4. **bottleneckRate:** Data rate of bottleneck link ("XMbps", where X is the data rate in Mbps) [10Mbps].
-5. **linkrate:** Data rate of edge link  ("XMbps", where X is the bandwidth in Mbps) [100Mbps].
-6. **useEcn:** Boolean indicating whether ECN should be enabled or disabled ("true" / "false") [true].
-7. **useOffload:** Boolean indicating whether Offload should be enabled or disabled ("true" / "false") [false].
-8. **stopTime:** The duration of the experiment ("Xs", where X is the time in seconds) [70s].
+1. **qdisc:** The Queue type used ("fq_codel" / "fq_pie" / "cake") [fq_pie].
+2. **bottleneck_delay:** The delay on the bottleneck link ("Xms", where X is the delay in milliseconds) [20ms].
+3. **edge_delay:** The delay on the edge links ("Xms", where X is the delay in milliseconds) [10ms].
+4. **bottleneck_bandwidth:** Data rate of bottleneck link ("Xmbit", where X is the data rate in Mbps) [10mbit].
+5. **edge_bandwidth:** Data rate of edge link  ("Xmbit", where X is the bandwidth in Mbps) [100mbit].
+6. **ECN:** Boolean indicating whether ECN should be enabled or disabled ("ON" / "OFF") [ON].
+7. **offload:** Boolean indicating whether Offload should be enabled or disabled ("ON" / "OFF") [OFF].
+8. **number_of_flow:** Number of flow (N, where N is a natural number) [1]
+9. **duration:** The duration of the experiment ("Xs", where X is the time in seconds) [70s].
+
 
 ## Generating a plot:
 The steps to generate a plot using plotter-gnu is given below:
