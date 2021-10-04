@@ -33,8 +33,8 @@ offload = sys.argv[7]
 number_of_flow = sys.argv[8]
 duration = sys.argv[9]
 
-#calculating rtt
-rtt= int( float(bottleneck_delay[:-2])*2+ float(edge_delay[:-2])*4 );
+#calculating rtt/delay
+delay= int( float(bottleneck_delay[:-2])*2+ float(edge_delay[:-2])*4 );
 
 ###### map to proper name ######
 offloads_value_map = {"ON":"OFLEn", "OFF":"OFLDis"}
@@ -183,7 +183,7 @@ if useECN == "True":
     if qdisc == "fq_pie":
         qdisc_parameters = {'target': '5ms', 'ecn': ''}
     elif qdisc == "cake":
-        value = rtt
+        value = delay
         qdisc_parameters = {'rtt' : str(value), 'ecn': ''}
     else:
         qdisc_parameters = {'ecn': ''}
@@ -195,7 +195,7 @@ elif useECN == "False":
     if qdisc == "fq_pie":
         qdisc_parameters = {'target': '5ms'}
     elif qdisc == "cake":
-        value = rtt
+        value = delay
         qdisc_parameters = {'rtt' : str(value)}
     else:
         qdisc_parameters = {}
@@ -214,8 +214,8 @@ if offload == "OFF":
         right_node_connections[i][1].disable_offload(offload_type)
 
 
-left_router_connection.disable_offload(offload_type)
-right_router_connection.disable_offload(offload_type)
+    left_router_connection.disable_offload(offload_type)
+    right_router_connection.disable_offload(offload_type)
 
 # Setting up the attributes of the connections between
 # the two routers
@@ -225,8 +225,8 @@ right_router_connection.set_attributes(bottleneck_bandwidth, bottleneck_delay, q
 ######  RUN TESTS ######
 
 name = ""
-print("here"+'_'+"me")
-name += queue_discipline_map[qdisc] + '_' + str(number_of_flow) +'_' + bottleneck_bandwidth[:-4]+ "Mbps" + '_' + str(rtt) + "ms" + '_' + ecn_values_map[useECN] + '_'+ offloads_value_map[offload]
+
+name += queue_discipline_map[qdisc] + '_' + str(number_of_flow) +'_' + bottleneck_bandwidth[:-4]+ "Mbps" + '_' + str(delay) + "ms" + '_' + ecn_values_map[useECN] + '_'+ offloads_value_map[offload]
 
 # Giving the experiment a name
 experiment = Experiment(name)
@@ -234,7 +234,7 @@ experiment = Experiment(name)
 # Add a flow from the left nodes to respective right nodes
 for i in range(min(num_of_left_nodes, num_of_right_nodes)):
     flow = Flow(
-        left_nodes[i], right_nodes[i], right_node_connections[i][0].address, 0, int(duration), 1
+        left_nodes[i], right_nodes[i], right_node_connections[i][0].address, 0, int(duration), int(number_of_flow)
     )
     # Use TCP cubic
     experiment.add_tcp_flow(flow, "cubic")
@@ -244,4 +244,3 @@ experiment.require_qdisc_stats(left_router_connection)
 
 # Running the experiment
 experiment.run()
-
