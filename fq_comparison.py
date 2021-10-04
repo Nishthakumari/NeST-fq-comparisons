@@ -19,26 +19,26 @@ from nest.topology import *
 
 
 # Checking if the right arguments are input
-if len(sys.argv) != 11:
-    print("usage: python3 Topology.py <qdisc> <bottleneck-delay> <bottleneck-bandwidth> <edge-delay> <edge-bandwidth> <tcp> <ECN> <offload> <number of flow> <duration>")
+if len(sys.argv) != 10:
+    print("usage: python3 Topology.py <qdisc> <bottleneck-delay> <bottleneck-bandwidth> <edge-delay> <edge-bandwidth> <useECN> <offload> <number_of_flow> <duration>")
     sys.exit(1)
 
-bottleneck_delay = sys.argv[1]
-bottleneck_bandwidth = sys.argv[2]
-edge_delay = sys.argv[3]
-edge_bandwidth = sys.argv[4]
-qdisc = sys.argv[5]
-tcp = sys.argv[6]
-ECN = sys.argv[7]
-offload = sys.argv[8]
-number_of_flow = sys.argv[9]
-duration = sys.argv[10]
+qdisc = sys.argv[1]
+bottleneck_delay = sys.argv[2]
+bottleneck_bandwidth = sys.argv[3]
+edge_delay = sys.argv[4]
+edge_bandwidth = sys.argv[5]
+useECN = sys.argv[6]
+offload = sys.argv[7]
+number_of_flow = sys.argv[8]
+duration = sys.argv[9]
 
-rtt= int(bottleneck_delay[:-2])*2+int(edge_delay[:-2])*4;
+#calculating rtt
+rtt= int( float(bottleneck_delay[:-2])*2+ float(edge_delay[:-2])*4 );
 
-###### map tp proper name ######
+###### map to proper name ######
 offloads_value_map = {"ON":"OFLEn", "OFF":"OFLDis"}
-ecn_values_map = {False: "ECNDis", True:"ECNEn"}
+ecn_values_map = {"False": "ECNDis", "True": "ECNEn"}
 unit_map = { "mbit": "Mbps"}
 queue_discipline_map = { "cake": "fqCobalt", "fq_codel": "fqCodel", "fq_pie": "fqPie"}
 
@@ -60,7 +60,7 @@ right_nodes = []
 num_of_left_nodes = 1
 num_of_right_nodes = 1
 
-if ECN == True:
+if useECN == "True":
     # Creating all the left and right nodes
     for i in range(num_of_left_nodes):
         left_nodes.append(Node("left-node-" + str(i)))
@@ -70,7 +70,7 @@ if ECN == True:
         right_nodes.append(Node("right-node-" + str(i)))
         right_nodes[i].configure_tcp_param("ecn", "1")
 
-elif ECN == False:
+elif useECN == "False":
     # Creating all the left and right nodes
     for i in range(num_of_left_nodes):
         left_nodes.append(Node("left-node-" + str(i)))
@@ -179,7 +179,7 @@ for i in range(num_of_right_nodes):
     right_node_connections[i][0].set_attributes(edge_bandwidth, edge_delay)
     right_node_connections[i][1].set_attributes(edge_bandwidth, edge_delay)
 
-if ECN == True:
+if useECN == "True":
     if qdisc == "fq_pie":
         qdisc_parameters = {'target': '5ms', 'ecn': ''}
     elif qdisc == "cake":
@@ -188,10 +188,10 @@ if ECN == True:
     else:
         qdisc_parameters = {'ecn': ''}
 
-    left_router_connection.set_attributes(rate[1], bottleneck_delay, qdisc, **qdisc_parameters)
-    right_router_connection.set_attributes(rate[1], bottleneck_delay, qdisc, **qdisc_parameters)
+    left_router_connection.set_attributes(bottleneck_bandwidth, bottleneck_delay, qdisc, **qdisc_parameters)
+    right_router_connection.set_attributes(bottleneck_bandwidth, bottleneck_delay, qdisc, **qdisc_parameters)
 
-elif ECN == False: 
+elif useECN == "False": 
     if qdisc == "fq_pie":
         qdisc_parameters = {'target': '5ms'}
     elif qdisc == "cake":
@@ -200,8 +200,8 @@ elif ECN == False:
     else:
         qdisc_parameters = {}
         
-    left_router_connection.set_attributes(rate[1], bottleneck_delay, qdisc, **qdisc_parameters)
-    right_router_connection.set_attributes(rate[1], bottleneck_delay, qdisc, **qdisc_parameters)
+    left_router_connection.set_attributes(bottleneck_bandwidth, bottleneck_delay, qdisc, **qdisc_parameters)
+    right_router_connection.set_attributes(bottleneck_bandwidth, bottleneck_delay, qdisc, **qdisc_parameters)
 
 if offload == "OFF":
     offload_type = ["gso", "gro", "tso"]
@@ -225,7 +225,8 @@ right_router_connection.set_attributes(bottleneck_bandwidth, bottleneck_delay, q
 ######  RUN TESTS ######
 
 name = ""
-name += queue_discipline_map[qdisc] + '_'+ str(number_of_flow) +'_' + bottleneck_bandwidth[:-4]+ +"Mbps" + '_' + rtt + "ms" + '_' +ecn_values_map[ecn] + '_'+ offloads_value_map[offload]
+print("here"+'_'+"me")
+name += queue_discipline_map[qdisc] + '_' + str(number_of_flow) +'_' + bottleneck_bandwidth[:-4]+ "Mbps" + '_' + str(rtt) + "ms" + '_' + ecn_values_map[useECN] + '_'+ offloads_value_map[offload]
 
 # Giving the experiment a name
 experiment = Experiment(name)
@@ -243,3 +244,4 @@ experiment.require_qdisc_stats(left_router_connection)
 
 # Running the experiment
 experiment.run()
+
