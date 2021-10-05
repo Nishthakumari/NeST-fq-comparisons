@@ -7,8 +7,12 @@ wget http://in.archive.ubuntu.com/ubuntu/pool/main/i/iproute2/iproute2_5.7.0-1ub
 sudo apt install ./iproute2_5.7.0-1ubuntu1_amd64.deb
 ```
 
-- Apply the below patch to generate dat files instead of plot automatically in NeST.
-  Go inside the nest repo and run
+- Apply the below patches to generate dat files automatically in NeST.
 ```bash
-git apply dat.patch
+sudo patch /usr/local/lib/python3.8/dist-packages/nest/experiment/plotter/tc.py > tc.diff
+sudo patch /usr/local/lib/python3.8/dist-packages/nest/experiment/plotter/ss.py > ss.diff
+sudo patch /usr/local/lib/python3.8/dist-packages/nest/experiment/plotter/ping.py > ping.diff
+sudo patch /usr/local/lib/python3.8/dist-packages/nest/experiment/plotter/iperf3.py > iperf3.diff
+sudo patch /usr/local/lib/python3.8/dist-packages/nest/experiment/plotter/netperf.py > netperf.
+sudo patch /usr/local/lib/python3.8/dist-packages/nest/experiment/pack.py > pack.diff
 ```
