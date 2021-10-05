@@ -1,0 +1,24 @@
+--- /usr/local/lib/python3.8/dist-packages/nest/experiment/plotter/netperf.py	2021-10-05 11:48:46.434954881 +0530
++++ netperf.py	2021-10-05 18:24:03.128700165 +0530
+@@ -5,6 +5,7 @@
+ 
+ import logging
+ import matplotlib.pyplot as plt
++import numpy as np
+ 
+ from ..pack import Pack
+ from .common import simple_plot, mix_plot
+@@ -68,7 +69,12 @@
+     filename = "{node}_{dest}_sending_rate.png".format(node=node, dest=dest)
+     Pack.dump_plot("netperf", filename, fig)
+     plt.close(fig)
+-
++    
++    filename2 = "{node}_{dest}_sending_rate.dat".format(node=node, dest=dest)
++    dat = np.array([timestamp, sending_rate])
++    dat_array= np.column_stack(dat)
++    Pack.dump_dat(filename2, dat_array)
++    
+     return (timestamp, sending_rate)
+ 
+ 

@@ -1,0 +1,22 @@
+--- /usr/local/lib/python3.8/dist-packages/nest/experiment/plotter/ping.py	2021-10-05 11:48:46.434954881 +0530
++++ ping.py	2021-10-05 18:24:11.684405273 +0530
+@@ -5,6 +5,7 @@
+ 
+ import logging
+ import matplotlib.pyplot as plt
++import numpy as np
+ 
+ from ..pack import Pack
+ from .common import simple_plot
+@@ -66,6 +67,11 @@
+     filename = "{node}_{dest}_ping.png".format(node=node, dest=dest)
+     Pack.dump_plot("ping", filename, fig)
+     plt.close(fig)
++    
++    filename2 = "{node}_{dest}_ping.dat".format(node=node, dest=dest)
++    dat = np.array([timestamp, rtt])
++    dat_array= np.column_stack(dat)
++    Pack.dump_dat(filename2, dat_array)
+ 
+     return (timestamp, rtt)
+ 

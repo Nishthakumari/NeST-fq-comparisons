@@ -1,0 +1,22 @@
+--- /usr/local/lib/python3.8/dist-packages/nest/experiment/plotter/iperf3.py	2021-10-05 11:48:46.434954881 +0530
++++ iperf3.py	2021-10-05 18:23:53.485034187 +0530
+@@ -5,6 +5,7 @@
+ 
+ import logging
+ import matplotlib.pyplot as plt
++import numpy as np
+ 
+ from ..pack import Pack
+ from .common import simple_plot
+@@ -94,6 +95,11 @@
+     filename = f"{node}_{dest_ip}_{local_port}_sending_rate.png"
+     Pack.dump_plot("iperf3", filename, fig)
+     plt.close(fig)
++    
++    filename2 = f"{node}_{dest_ip}_{local_port}_sending_rate.dat"
++    dat = np.array([timestamp, sending_rate])
++    dat_array= np.column_stack(dat)
++    Pack.dump_dat(filename2, dat_array)
+ 
+ 
+ # pylint: disable=too-many-locals
