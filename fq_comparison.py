@@ -20,7 +20,7 @@ from nest.topology import *
 
 # Checking if the right arguments are input
 if len(sys.argv) != 10:
-    print("usage: python3 Topology.py <qdisc> <bottleneck-delay> <bottleneck-bandwidth> <edge-delay> <edge-bandwidth> <useECN> <offload> <number_of_flow> <duration>")
+    print("usage: python3 fq_comparison.py <qdisc> <bottleneck-delay> <bottleneck-bandwidth> <edge-delay> <edge-bandwidth> <useECN> <offload> <number_of_flow> <duration>")
     sys.exit(1)
 
 qdisc = sys.argv[1]
