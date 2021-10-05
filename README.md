@@ -44,7 +44,7 @@ pip install numpy
 
 4. To run the file with default argument, please use the following command:
 ```bash
-sudo python3 <qdisc> <bottleneck-delay> <bottleneck-bandwidth> <edge-delay> <edge-bandwidth> <ECN> <offload> <number of flow> <duration> 
+python3 fq_comparison.py <qdisc> <bottleneck-delay> <bottleneck-bandwidth> <edge-delay> <edge-bandwidth> <useECN> <offload> <number_of_flow> <duration>")
 ```
 
 ## Parameters:
