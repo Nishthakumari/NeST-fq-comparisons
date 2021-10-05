@@ -13,6 +13,6 @@ sudo patch /usr/local/lib/python3.8/dist-packages/nest/experiment/plotter/tc.py 
 sudo patch /usr/local/lib/python3.8/dist-packages/nest/experiment/plotter/ss.py > ss.diff
 sudo patch /usr/local/lib/python3.8/dist-packages/nest/experiment/plotter/ping.py > ping.diff
 sudo patch /usr/local/lib/python3.8/dist-packages/nest/experiment/plotter/iperf3.py > iperf3.diff
-sudo patch /usr/local/lib/python3.8/dist-packages/nest/experiment/plotter/netperf.py > netperf.
+sudo patch /usr/local/lib/python3.8/dist-packages/nest/experiment/plotter/netperf.py > netperf.diff
 sudo patch /usr/local/lib/python3.8/dist-packages/nest/experiment/pack.py > pack.diff
 ```
