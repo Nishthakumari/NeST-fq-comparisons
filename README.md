@@ -1,42 +1,7 @@
 # NeST-fq-comparisons
 
-## Requirements Setup
-* nitk-nest
-
-```bash
-1. Clone the official git repository::
-
-    $ git clone https://gitlab.com/nitk-nest/nest.git
-
-2. Install NeST via pip in editable mode:
-
-    $ python3 -m pip install -e .
-```
-
-* gnuplot
-
-```bash
-sudo apt-get update
-sudo apt-get install gnuplot
-```
-
-* numpy
-Install via pip:
-
-```bash
-pip install numpy
-```
-
-
-
 ## Steps to use the script:
-1. Clone the official git repository::
-
-    $ git clone https://gitlab.com/nitk-nest/nest.git
-
-2. Install NeST via pip in editable mode:
-
-    $ python3 -m pip install -e .
+1. Install NeST from source in edit mode. Instructions are given [here](https://gitlab.com/nitk-nest/nest/-/blob/master/docs/source/user/install.rst).
 
 3. Install iproute2 (version >= 5.5) and apply the custom NeST patches as mentioned [here](./misc_patch_scripts/README.md)    
 
