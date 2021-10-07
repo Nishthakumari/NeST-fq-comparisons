@@ -217,11 +217,6 @@ if offload == "OFF":
     left_router_connection.disable_offload(offload_type)
     right_router_connection.disable_offload(offload_type)
 
-# Setting up the attributes of the connections between
-# the two routers
-left_router_connection.set_attributes(bottleneck_bandwidth, bottleneck_delay, qdisc)
-right_router_connection.set_attributes(bottleneck_bandwidth, bottleneck_delay, qdisc)
-
 ######  RUN TESTS ######
 
 name = ""
